@@ -1,157 +1,105 @@
-
-
-import json
-import os
-from datetime import datetime
-
-ARCHIVO = "expedientes.txt"
-RESPALDO = "respaldo_expedientes.txt"
+""" Programa de Mesa de Partes """
 
 expedientes = []
 
 
-# 1. CARGAR LOS EXPEDIENTES GUARDADOS
-def cargar_expedientes():
-    if os.path.exists(ARCHIVO):
-        try:
-            archivo = open(ARCHIVO, "r", encoding="utf-8")
-            datos = json.load(archivo)
-            archivo.close()
-            return datos
-        except (OSError, json.JSONDecodeError):
-            print("No se pudieron cargar los datos.")
-
-    return []
-
-
-# 2. GUARDAR LOS EXPEDIENTES Y EL RESPALDO
-def guardar_expedientes():
-    try:
-        archivo = open(ARCHIVO, "w", encoding="utf-8")
-        json.dump(expedientes, archivo, indent=4, ensure_ascii=False)
-        archivo.close()
-
-        archivo = open(RESPALDO, "w", encoding="utf-8")
-        json.dump(expedientes, archivo, indent=4, ensure_ascii=False)
-        archivo.close()
-
-        return True
-
-    except OSError:
-        print("Error al guardar los archivos.")
-        return False
-
-
-# 3. GENERAR UN CODIGO CORRELATIVO
-def generar_codigo():
-    mayor = 0
-
-    for expediente in expedientes:
-        numero = int(expediente["codigo"].split("-")[1])
-
-        if numero > mayor:
-            mayor = numero
-
-    return "EXP-" + str(mayor + 1).zfill(4)
-
-
-# 4. REGISTRAR UN EXPEDIENTE
+# 1. REGISTRAR UN EXPEDIENTE
 def registrar_expediente():
+    """ Función para registrar expedientes """
+
     print("\n--- REGISTRO DE EXPEDIENTE ---")
 
-    dni = input("Ingrese DNI de 8 digitos: ").strip()
+    while True:
+        try:
+            dni = input("Ingrese DNI de 8 digitos: ")
 
-    if len(dni) != 8 or not dni.isdigit():
-        print("Error: el DNI debe tener 8 digitos.")
-        return
+            if len(dni) != 8 or not dni.isdigit():
+                print("Error: el DNI debe tener 8 digitos.")
+            else:
+                break
+        except ValueError:
+            print("Error: el DNI debe ser un numero.")
 
-    nombres = input("Ingrese nombres y apellidos: ").strip()
+    while True:
+        try:
+            nombres = input("Ingrese nombres y apellidos: ")
 
-    if nombres == "":
-        print("Error: los nombres son obligatorios.")
-        return
+            if nombres == "":
+                print("Error: los nombres son obligatorios.")
+            else:
+                break
+        except ValueError:
+            print("Error: Nombres deben ser una cadena de texto.")
 
-    print("\nTipos de tramite:")
-    print("1. Solicitud")
-    print("2. Licencia")
-    print("3. Reclamo")
+    while True:
+        try:
+            print("\nTipos de tramite:")
+            print("1. Solicitud")
+            print("2. Licencia")
+            print("3. Reclamo")
 
-    opcion = input("Seleccione el tipo de tramite: ").strip()
+            opcion = int(input("Seleccione el tipo de tramite: "))
 
-    if opcion == "1":
-        tipo = "Solicitud"
-    elif opcion == "2":
-        tipo = "Licencia"
-    elif opcion == "3":
-        tipo = "Reclamo"
-    else:
-        print("Tipo de tramite incorrecto.")
-        return
+            match opcion:
+                case 1:
+                    tipo = "Solicitud"
+                    break
+                case 2:
+                    tipo = "Licencia"
+                    break
+                case 3:
+                    tipo = "Reclamo"
+                    break
+                case _:
+                    print("Error: opcion invalida.")
+        except ValueError:
+            print("Error: opcion invalida.")
 
-    asunto = input("Ingrese el asunto: ").strip()
+    while True:
+        try:
+            asunto = input("Ingrese el asunto: ")
 
-    if asunto == "":
-        print("Error: el asunto es obligatorio.")
-        return
+            if asunto == "":
+                print("Error: el asunto es obligatorio.")
+            else:
+                break
+        except ValueError:
+            print("Error: el asunto debe ser una cadena de texto.")
 
-    folios = input("Ingrese el numero de folios: ").strip()
+    while True:
+        try:
+            folios = int(input("Ingrese el numero de folios: "))
 
-    if not folios.isdigit() or int(folios) <= 0:
-        print("Error: los folios deben ser positivos.")
-        return
+            if folios <= 0:
+                print("Error: los folios deben ser positivos.")
+            else:
+                break
+        except ValueError:
+            print("Error: los folios deben ser un numero entero positivo.")
 
     # Crear el expediente
-    expediente = {
-        "codigo": generar_codigo(),
-        "dni": dni,
-        "nombres": nombres,
-        "tipo": tipo,
-        "asunto": asunto,
-        "folios": int(folios),
-        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
+    expediente = [dni, nombres, tipo, asunto, folios]
 
     expedientes.append(expediente)
 
-    if guardar_expedientes():
-        print("\nExpediente registrado correctamente.")
-        print("Codigo asignado:", expediente["codigo"])
-        print("Fecha:", expediente["fecha"])
-    else:
-        expedientes.pop()
-        print("No se pudo completar el registro.")
 
-
-# 5. MOSTRAR LOS DATOS DE UN EXPEDIENTE
+# 2. MOSTRAR LOS DATOS DE UN EXPEDIENTE
 def mostrar_expediente(expediente):
+    """ Función para mostrar los datos de los expedientes """
+
     print("\n------------------------------")
-    print("Codigo:", expediente["codigo"])
-    print("DNI:", expediente["dni"])
-    print("Nombres:", expediente["nombres"])
-    print("Tipo:", expediente["tipo"])
-    print("Asunto:", expediente["asunto"])
-    print("Folios:", expediente["folios"])
-    print("Fecha:", expediente["fecha"])
+    print("DNI:", expediente[0])
+    print("Nombres:", expediente[1])
+    print("Tipo:", expediente[2])
+    print("Asunto:", expediente[3])
+    print("Folios:", expediente[4])
     print("------------------------------")
 
 
-# 6. BUSCAR UN EXPEDIENTE POR CODIGO
-def buscar_expediente():
-    codigo = input("Ingrese el codigo (ejemplo EXP-0001): ")
-    encontrado = False
-
-    for expediente in expedientes:
-        if expediente["codigo"] == codigo.upper().strip():
-            mostrar_expediente(expediente)
-            encontrado = True
-            break
-
-    if encontrado == False:
-        print("Expediente no encontrado.")
-
-
-# 7. MOSTRAR TODOS LOS EXPEDIENTES
+# 3. MOSTRAR TODOS LOS EXPEDIENTES
 def listar_expedientes():
+    """ Función para listar los expedientes """
+
     if len(expedientes) == 0:
         print("No hay expedientes registrados.")
     else:
@@ -161,72 +109,34 @@ def listar_expedientes():
             mostrar_expediente(expediente)
 
 
-# 8. ORDENAR EXPEDIENTES
-def ordenar_expedientes():
-    if len(expedientes) == 0:
-        print("No hay expedientes para ordenar.")
-        return
-
-    print("\n1. Ordenar por numero de folios")
-    print("2. Ordenar por fecha")
-    opcion = input("Seleccione una opcion: ")
-
-    if opcion == "1":
-        expedientes.sort(key=lambda e: e["folios"])
-    elif opcion == "2":
-        expedientes.sort(key=lambda e: e["fecha"])
-    else:
-        print("Opcion incorrecta.")
-        return
-
-    guardar_expedientes()
-
-    print("\nExpedientes ordenados:")
-
-    for expediente in expedientes:
-        print(
-            expediente["codigo"],
-            "-",
-            expediente["nombres"],
-            "- Folios:",
-            expediente["folios"],
-            "- Fecha:",
-            expediente["fecha"]
-        )
-
-
-# 9. MENU PRINCIPAL
+# 4. MENU PRINCIPAL
 def menu():
-    global expedientes
-
-    expedientes = cargar_expedientes()
+    """ Función para ejecutar el menú del programa """
 
     while True:
-        print("\n================================")
-        print(" SISTEMA DE MESA DE PARTES")
-        print("================================")
-        print("1. Registrar expediente")
-        print("2. Buscar expediente")
-        print("3. Mostrar expedientes")
-        print("4. Ordenar expedientes")
-        print("5. Salir")
-        print("================================")
+        try:
+            print("\n================================")
+            print(" SISTEMA DE MESA DE PARTES")
+            print("================================")
+            print("1. Registrar expediente")
+            print("2. Mostrar expedientes")
+            print("3. Salir")
+            print("================================")
 
-        opcion = input("Seleccione una opcion: ")
+            opcion = int(input("Seleccione una opcion: "))
 
-        if opcion == "1":
-            registrar_expediente()
-        elif opcion == "2":
-            buscar_expediente()
-        elif opcion == "3":
-            listar_expedientes()
-        elif opcion == "4":
-            ordenar_expedientes()
-        elif opcion == "5":
-            print("Datos guardados. Hasta luego.")
-            break
-        else:
-            print("Opcion incorrecta.")
+            match opcion:
+                case 1:
+                    registrar_expediente()
+                case 2:
+                    listar_expedientes()
+                case 3:
+                    print("Saliendo del programa...")
+                    break
+                case _:
+                    print("Error: opcion invalida.")
+        except ValueError:
+            print("Error: opcion invalida.")
 
 
 # INICIO DEL PROGRAMA
