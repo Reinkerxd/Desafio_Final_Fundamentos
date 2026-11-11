@@ -1,7 +1,5 @@
 """ Programa de Mesa de Partes """
 
-expedientes = []
-
 
 # 1. REGISTRAR UN EXPEDIENTE
 def registrar_expediente():
@@ -78,50 +76,62 @@ def registrar_expediente():
             print("Error: los folios deben ser un numero entero positivo.")
 
     # Crear el expediente
-    expediente = [dni, nombres, tipo, asunto, folios]
+    archivo = open("Expedientes.txt", "a", encoding="utf-8")
+    archivo.write(f"{dni}, {nombres}, {tipo}, {asunto}, {folios}\n")
+    archivo.close()
 
-    expedientes.append(expediente)
+
+# 2. AGREGAR EXPEDIENTE A LA LISTA EXPEDIENTES
+def agregar_expediente():
+    """ Función que agrega expedientes a la lista de expedientes """
+    expedientes = []
+    with open("Expedientes.txt", "r", encoding="utf-8") as archivo:
+        for data in archivo:
+            expediente = data.strip().split(',')
+            expedientes.append(expediente)
+    return expedientes
 
 
-# 2. MOSTRAR LOS DATOS DE UN EXPEDIENTE
+# 3. MOSTRAR LOS DATOS DE UN EXPEDIENTE
 def mostrar_expediente(expediente):
     """ Función para mostrar los datos de los expedientes """
 
-    print("\n------------------------------")
+    print("\n--------------------------------")
     print("DNI:", expediente[0])
     print("Nombres:", expediente[1])
     print("Tipo:", expediente[2])
     print("Asunto:", expediente[3])
     print("Folios:", expediente[4])
-    print("------------------------------")
+    print("--------------------------------")
 
 
-# 3. MOSTRAR TODOS LOS EXPEDIENTES
+# 4. MOSTRAR TODOS LOS EXPEDIENTES
 def listar_expedientes():
     """ Función para listar los expedientes """
+    lista = agregar_expediente()
 
-    if len(expedientes) == 0:
-        print("No hay expedientes registrados.")
+    if len(lista) == 0:
+        print("\nERROR: No hay expedientes registrados")
     else:
-        print("\n--- LISTADO DE EXPEDIENTES ---")
+        print("\n==== LISTADO DE EXPEDIENTES ====")
 
-        for expediente in expedientes:
+        for expediente in lista:
             mostrar_expediente(expediente)
 
 
-# 4. MENU PRINCIPAL
+# 5. MENU PRINCIPAL
 def menu():
     """ Función para ejecutar el menú del programa """
 
     while True:
         try:
-            print("\n================================")
+            print("\n==================================")
             print(" SISTEMA DE MESA DE PARTES")
-            print("================================")
+            print("==================================")
             print("1. Registrar expediente")
             print("2. Mostrar expedientes")
             print("3. Salir")
-            print("================================")
+            print("==================================")
 
             opcion = int(input("Seleccione una opcion: "))
 
