@@ -50,6 +50,44 @@ def pedir_tipo_tramite():
             print("Error: opcion invalida.")
 
 
+def pedir_estado():
+    """ Muestra los estados posibles y devuelve el elegido """
+    while True:
+        try:
+            print("\nEstados del expediente:")
+            print("1. No visto")
+            print("2. En proceso")
+            print("3. Completado")
+
+            opcion = int(input("Seleccione el nuevo estado: "))
+
+            match opcion:
+                case 1:
+                    return "No visto"
+                case 2:
+                    return "En proceso"
+                case 3:
+                    return "Completado"
+                case _:
+                    print("Error: opcion invalida.")
+        except ValueError:
+            print("Error: opcion invalida.")
+
+
+def pedir_numero_expediente(cantidad):
+    """ Pide el número de un expediente entre 1 y la cantidad que existe """
+    while True:
+        try:
+            numero = int(input("Ingrese el numero del expediente: "))
+
+            if numero < 1 or numero > cantidad:
+                print(f"Error: el numero debe estar entre 1 y {cantidad}.")
+            else:
+                return numero
+        except ValueError:
+            print("Error: debe ingresar un numero entero.")
+
+
 def pedir_folios():
     """ Pide el número de folios hasta que sea un entero positivo """
     while True:
