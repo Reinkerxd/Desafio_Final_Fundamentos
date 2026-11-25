@@ -15,7 +15,7 @@ def registrar_expediente():
     asunto = validaciones.pedir_texto("Ingrese el asunto: ",
                                       "Error: el asunto es obligatorio.")
     folios = validaciones.pedir_folios()
-    estado = "No visto"
+    estado = "No visto"  # Todo expediente nuevo empieza sin revisar
 
     persistencia.guardar_expediente(dni, nombres, tipo, asunto, folios, estado)
     print("\nExpediente registrado correctamente.")
@@ -47,7 +47,31 @@ def listar_expedientes():
             mostrar_expediente(expediente)
 
 
-# 4. ACTUALIZAR EL ESTADO DE UN EXPEDIENTE
+# 4. BUSCAR EXPEDIENTES POR DNI
+def buscar_por_dni():
+    """ Muestra todos los expedientes que pertenecen a un DNI """
+    lista = persistencia.cargar_expedientes()
+
+    if len(lista) == 0:
+        print("\nERROR: No hay expedientes registrados")
+        return
+
+    print("\n==== BUSCAR POR DNI ====")
+    dni = validaciones.pedir_dni()
+
+    encontrados = 0
+    for expediente in lista:
+        if expediente[0] == dni:   # La posición 0 es el DNI
+            mostrar_expediente(expediente)
+            encontrados += 1
+
+    if encontrados == 0:
+        print(f"\nNo se encontraron expedientes con el DNI {dni}")
+    else:
+        print(f"\nTotal de expedientes encontrados: {encontrados}")
+
+
+# 5. ACTUALIZAR EL ESTADO DE UN EXPEDIENTE
 def actualizar_estado():
     """ Permite elegir un expediente y cambiar su estado """
     lista = persistencia.cargar_expedientes()
@@ -59,8 +83,7 @@ def actualizar_estado():
     print("\n==== ACTUALIZAR ESTADO ====")
     numero = 1
     for expediente in lista:
-        print(f"{numero}. {expediente[0]} - {expediente[1]} - {expediente[3]}"
-              f"[{expediente[5]}]")
+        print(f"{numero}. {expediente[0]} - {expediente[1]} - {expediente[3]} [{expediente[5]}]")
         numero += 1
 
     numero = validaciones.pedir_numero_expediente(len(lista))
@@ -71,7 +94,7 @@ def actualizar_estado():
     print(f"\nEstado actualizado a: {nuevo_estado}")
 
 
-# 5. MENU PRINCIPAL
+# 6. MENU PRINCIPAL
 def menu():
     """ Ejecuta el menú del programa """
     while True:
@@ -81,8 +104,9 @@ def menu():
             print("==================================")
             print("1. Registrar expediente")
             print("2. Mostrar expedientes")
-            print("3. Actualizar estado de expediente")
-            print("4. Salir")
+            print("3. Buscar expedientes por DNI")
+            print("4. Actualizar estado de expediente")
+            print("5. Salir")
             print("==================================")
 
             opcion = int(input("Seleccione una opcion: "))
@@ -93,8 +117,10 @@ def menu():
                 case 2:
                     listar_expedientes()
                 case 3:
-                    actualizar_estado()
+                    buscar_por_dni()
                 case 4:
+                    actualizar_estado()
+                case 5:
                     print("Saliendo del programa...")
                     break
                 case _:
