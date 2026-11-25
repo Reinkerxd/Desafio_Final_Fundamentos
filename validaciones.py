@@ -13,6 +13,19 @@ def pedir_dni():
             return dni
 
 
+def pedir_nombres():
+    """ Pide nombres y apellidos: solo letras y espacios """
+    while True:
+        nombres = input("Ingrese nombres y apellidos: ").strip()
+
+        if nombres == "":
+            print("Error: los nombres son obligatorios.")
+        elif not nombres.replace(" ", "").isalpha():
+            print("Error: los nombres solo pueden contener letras y espacios.")
+        else:
+            return nombres
+
+
 def pedir_texto(mensaje, mensaje_error):
     """ Pide un texto obligatorio (no vacío). Sirve para nombres y asunto """
     while True:
