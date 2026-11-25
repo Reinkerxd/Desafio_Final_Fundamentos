@@ -10,13 +10,12 @@ def registrar_expediente():
     print("\n--- REGISTRO DE EXPEDIENTE ---")
 
     dni = validaciones.pedir_dni()
-    nombres = validaciones.pedir_texto("Ingrese nombres y apellidos: ",
-                                       "Error: los nombres son obligatorios.")
+    nombres = validaciones.pedir_nombres()
     tipo = validaciones.pedir_tipo_tramite()
     asunto = validaciones.pedir_texto("Ingrese el asunto: ",
                                       "Error: el asunto es obligatorio.")
     folios = validaciones.pedir_folios()
-    estado = "No visto"  # Todo expediente nuevo empieza sin revisar
+    estado = "No visto"
 
     persistencia.guardar_expediente(dni, nombres, tipo, asunto, folios, estado)
     print("\nExpediente registrado correctamente.")
