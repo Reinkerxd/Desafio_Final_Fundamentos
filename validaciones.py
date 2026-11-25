@@ -5,10 +5,10 @@ correctos """
 def pedir_dni():
     """ Pide un DNI hasta que tenga exactamente 8 dígitos """
     while True:
-        dni = input("Ingrese DNI de 8 dígitos: ").strip()
+        dni = input("Ingrese DNI de 8 digitos: ").strip()
 
         if len(dni) != 8 or not dni.isdigit():
-            print("Error: el DNI debe tener 8 dígitos.")
+            print("Error: el DNI debe tener 8 digitos.")
         else:
             return dni
 
@@ -34,7 +34,7 @@ def pedir_texto(mensaje, mensaje_error):
         if texto == "":
             print(mensaje_error)
         elif "|" in texto:
-            print("Error: no se permite el carácter '|'.")
+            print("Error: no se permite el caracter '|'.")
         else:
             return texto
 
@@ -48,7 +48,7 @@ def pedir_tipo_tramite():
             print("2. Licencia")
             print("3. Reclamo")
 
-            opcion = int(input("Seleccione el tipo de trámite: "))
+            opcion = int(input("Seleccione el tipo de tramite: "))
 
             match opcion:
                 case 1:
@@ -58,9 +58,9 @@ def pedir_tipo_tramite():
                 case 3:
                     return "Reclamo"
                 case _:
-                    print("Error: opción invalida.")
+                    print("Error: opcion invalida.")
         except ValueError:
-            print("Error: opción invalida.")
+            print("Error: opcion invalida.")
 
 
 def pedir_estado():
@@ -82,9 +82,9 @@ def pedir_estado():
                 case 3:
                     return "Completado"
                 case _:
-                    print("Error: opción invalida.")
+                    print("Error: opcion invalida.")
         except ValueError:
-            print("Error: opción invalida.")
+            print("Error: opcion invalida.")
 
 
 def pedir_numero_expediente(cantidad):
