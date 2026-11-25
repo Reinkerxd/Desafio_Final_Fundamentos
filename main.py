@@ -15,7 +15,7 @@ def registrar_expediente():
     asunto = validaciones.pedir_texto("Ingrese el asunto: ",
                                       "Error: el asunto es obligatorio.")
     folios = validaciones.pedir_folios()
-    estado = "No visto"  # Todo expediente nuevo empieza sin revisar
+    estado = "No visto"  # Com: Todo expediente nuevo empieza sin revisar
 
     persistencia.guardar_expediente(dni, nombres, tipo, asunto, folios, estado)
     print("\nExpediente registrado correctamente.")
@@ -83,7 +83,8 @@ def actualizar_estado():
     print("\n==== ACTUALIZAR ESTADO ====")
     numero = 1
     for expediente in lista:
-        print(f"{numero}. {expediente[0]} - {expediente[1]} - {expediente[3]} [{expediente[5]}]")
+        print(f"{numero}. {expediente[0]} - {expediente[1]} - {expediente[3]}"
+              f"[{expediente[5]}]")
         numero += 1
 
     numero = validaciones.pedir_numero_expediente(len(lista))
